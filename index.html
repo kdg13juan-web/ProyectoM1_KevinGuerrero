@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>PALETA</title>
+
+</head>
+
+    
+<body>
+    <header>
+        <h1>PALETA DE COLORES</h1>
+    </header>
+
+
+    <main>
+   
+    
+
+    
+        <div class="botones">
+            <button onclick="mostrarRuleta(1)">rgb</button>
+            <button onclick="mostrarRuleta(2)">hex</button>
+            <button onclick="mostrarRuleta(3)">hsl</button>
+        </div>
+
+        <div id="ruleta1" class="ruleta">
+            <canvas id="canvas1" width="400" height="400"></canvas>
+            <button onclick="girarRuleta(1)">Girar</button>
+        </div>
+
+        <div id="ruleta2" class="ruleta oculto">
+            <canvas id="canvas2" width="400" height="400"></canvas>
+            <button onclick="girarRuleta(2)">Girar</button>
+        </div>
+
+        <div id="ruleta3" class="ruleta oculto">
+            <canvas id="canvas3" width="400" height="400"></canvas>
+            <button onclick="girarRuleta(3)">Girar</button>
+        </div>
+    </main>
+
+<script src="script.js"></script>
+
+    <footer>
+        <p>© 2026 PALETA DE COLORES. Todos los derechos reservados.</p>
+
+
+</body>
+</html>
