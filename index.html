@@ -21,8 +21,8 @@
 
     
         <div class="botones">
-            <button onclick="mostrarRuleta(1)">rgb</button>
-            <button onclick="mostrarRuleta(2)">hex</button>
+            <button onclick="mostrarRuleta(1)">AZAR</button>
+            <button onclick="mostrarRuleta(2)">CONJUNTO</button>
             <button onclick="mostrarRuleta(3)">hsl</button>
         </div>
 
@@ -40,7 +40,12 @@
             <canvas id="canvas3" width="400" height="400"></canvas>
             <button onclick="girarRuleta(3)">Girar</button>
         </div>
-    </main>
+
+        <div id="paleta" class="paleta oculto">
+            <h2>🎨 Paleta de Colores Ganadora</h2>
+            <div id="contenedorColores" class="contenedor-colores"></div>
+        </div>
+    
 
 <script src="script.js"></script>
 
