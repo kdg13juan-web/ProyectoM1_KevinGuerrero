@@ -1,8 +1,8 @@
 // Generar color aleatorio
 function generarColorAleatorio() {
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
+  const r = Math.floor(Math.random() * 250);
+  const g = Math.floor(Math.random() * 250);
+  const b = Math.floor(Math.random() * 250);
   
   const hex = "#" + [r, g, b].map(x => {
     const hex = x.toString(16);
@@ -12,88 +12,6 @@ function generarColorAleatorio() {
   const rgb = `rgb(${r}, ${g}, ${b})`;
   
   return { r, g, b, hex, rgb };
-}
-
-// Generar colores secuenciales (para gradientes)
-function generarColoresSecuenciales(cantidad) {
-  let colores = [];
-  for (let i = 0; i < cantidad; i++) {
-    const hue = (i * 360) / cantidad; // Distribuye colores en el espectro
-    const saturation = 70;
-    const lightness = 50;
-    
-    // Convertir HSL a RGB
-    const h = hue / 60;
-    const s = saturation / 100;
-    const l = lightness / 100;
-    
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs((h % 2) - 1));
-    const m = l - c / 2;
-    
-    let r, g, b;
-    if (h < 1) { r = c; g = x; b = 0; }
-    else if (h < 2) { r = x; g = c; b = 0; }
-    else if (h < 3) { r = 0; g = c; b = x; }
-    else if (h < 4) { r = 0; g = x; b = c; }
-    else if (h < 5) { r = x; g = 0; b = c; }
-    else { r = c; g = 0; b = x; }
-    
-    r = Math.round((r + m) * 255);
-    g = Math.round((g + m) * 255);
-    b = Math.round((b + m) * 255);
-    
-    const hex = "#" + [r, g, b].map(val => {
-      const hexVal = val.toString(16);
-      return hexVal.length === 1 ? "0" + hexVal : hexVal;
-    }).join("").toUpperCase();
-    
-    const rgb = `rgb(${r}, ${g}, ${b})`;
-    
-    colores.push({ r, g, b, hex, rgb });
-  }
-  return colores;
-}
-
-// Generar 10 colores secuenciales empezando desde un índice
-function generarGanadoresSeguidos(indiceInicio, cantidad = 10) {
-  let colores = [];
-  for (let i = 0; i < cantidad; i++) {
-    const hue = ((indiceInicio + i) * 360) / cantidad; // Inicia desde el índice ganador
-    const saturation = 70;
-    const lightness = 50;
-    
-    // Convertir HSL a RGB
-    const h = hue / 60;
-    const s = saturation / 100;
-    const l = lightness / 100;
-    
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs((h % 2) - 1));
-    const m = l - c / 2;
-    
-    let r, g, b;
-    if (h < 1) { r = c; g = x; b = 0; }
-    else if (h < 2) { r = x; g = c; b = 0; }
-    else if (h < 3) { r = 0; g = c; b = x; }
-    else if (h < 4) { r = 0; g = x; b = c; }
-    else if (h < 5) { r = x; g = 0; b = c; }
-    else { r = c; g = 0; b = x; }
-    
-    r = Math.round((r + m) * 255);
-    g = Math.round((g + m) * 255);
-    b = Math.round((b + m) * 255);
-    
-    const hex = "#" + [r, g, b].map(val => {
-      const hexVal = val.toString(16);
-      return hexVal.length === 1 ? "0" + hexVal : hexVal;
-    }).join("").toUpperCase();
-    
-    const rgb = `rgb(${r}, ${g}, ${b})`;
-    
-    colores.push({ r, g, b, hex, rgb });
-  }
-  return colores;
 }
 
 // Mostrar paleta de colores
@@ -140,9 +58,6 @@ const opcionesRuletas = {
     , 34, 35, 36,37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,71, 72, 73, 74, 75, 76, 77, 78, 79, 80
     ,81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
   2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
-    , 34, 35, 36,37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,71, 72, 73, 74, 75, 76, 77, 78, 79, 80
-    ,81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
-  3: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
     , 34, 35, 36,37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,71, 72, 73, 74, 75, 76, 77, 78, 79, 80
     ,81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
 };
@@ -219,15 +134,9 @@ function girarRuleta(num) {
       alert(`🎉 ¡GANASTE EL NÚMERO ${numeroGanador}! 🎉`);
       
       let colores = [];
-      
-      // Si es la ruleta HEX (num = 2), generar 10 colores secuenciales empezando desde el ganador
-      if (num === 2) {
-        colores = generarGanadoresSeguidos(indiceGanador, 10);
-      } else {
-        // Otras ruletas: 6 colores aleatorios
-        for (let i = 0; i < 6; i++) {
-          colores.push(generarColorAleatorio());
-        }
+      // Generar 6 colores aleatorios
+      for (let i = 0; i < 6; i++) {
+        colores.push(generarColorAleatorio());
       }
       
       // Mostrar paleta
@@ -238,7 +147,6 @@ function girarRuleta(num) {
   requestAnimationFrame(animar);
 }
 
-// Inicializar todas las ruletas
+// Inicializar ruletas
 dibujarRuleta(1);
 dibujarRuleta(2);
-dibujarRuleta(3);
