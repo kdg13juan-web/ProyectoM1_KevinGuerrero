@@ -1,0 +1,281 @@
+/* =========================
+   Variables globales
+========================= */
+:root {
+  --color-bg: #eeeeee;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-primary: #007BFF;
+  --color-primary-hover: #0056b3;
+  --color-gray: #6b7280;
+}
+
+/* =========================
+   Reset y tipografía
+========================= */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: var(--color-bg);
+  margin: 0;
+  padding: 0;
+}
+/* =========================
+   Reset y tipografía
+========================= */
+.icono {
+  width: 20px;
+  height: 20px;
+  fill: var(--color-gray);
+  transition: fill 0.2s ease;
+}
+/* =========================
+   Layout principal
+========================= */
+.container {
+  display: flex;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+}
+
+.sidebar {
+  width: 250px;
+  background: var(--color-white);
+  padding: 20px;
+  border-right: 2px solid var(--color-black);
+  font-size: 25px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+/* =========================
+   Botones y selects
+========================= */
+button, select {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 14px;
+}
+
+button:hover {
+  background: var(--color-primary-hover);
+}
+
+.style-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.style-buttons button {
+  background: #6c757d;
+}
+
+.style-buttons button:hover {
+  background: #495057;
+}
+
+/* =========================
+   Paletas de colores
+========================= */
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.color-box {
+  width: 180px;
+  height: 150px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(.4,2,.3,1), box-shadow 0.2s;
+}
+
+.color-box:hover {
+  transform: scale(1.12);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+}
+
+.color-box.copied {
+  animation: copied-pop 0.1s;
+}
+
+@keyframes copied-pop {
+  0%   { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.18);}
+  50%  { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.10);}
+  100% { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.18);}
+}
+
+.color-info {
+  font-size: 12px;
+  text-align: center;
+  background: rgba(255,255,255,0.9);
+  padding: 4px;
+  border-radius: 4px;
+  width: 95%;
+  margin-bottom: 5px;
+}
+
+/* =========================
+   Títulos
+========================= */
+h2.title {
+  margin: 0 auto 20px;
+  border: 1px solid var(--color-black);
+  border-radius: 999px;
+  padding: 10px 20px;
+  width: fit-content;
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+}
+
+.title-saved-palettes {
+  margin: 30px 0 10px;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--color-white);
+  color: #333;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* =========================
+   Paletas guardadas
+========================= */
+.saved-palettes {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 15px;
+}
+
+.saved-palettes .palette {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.saved-palettes .color-box {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.saved-palettes .formats {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* =========================
+   Footer
+========================= */
+footer.bottom {
+  margin: 30px 0 10px;
+  padding: 20px;
+  border-radius: 6px;
+  background: var(--color-white);
+  color: #333;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--color-gray);
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(250,250,250,0.4));
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(16,24,40,0.04);
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  max-width: 900px;
+  margin: 18px auto 0;
+  position: relative;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.footer-hint .hint-text {
+  color: #374151;
+  font-weight: 500;
+}
+
+.footer-hint .hint-sep {
+  color: #d1d5db;
+  margin: 0 6px;
+}
+
+.footer-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: linear-gradient(180deg,#111827,#0b1220);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(2,6,23,0.45);
+  border: 1px solid rgba(255,255,255,0.06);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+  font-size: 12px;
+}
+
+.footer-key.emoji {
+  background: linear-gradient(180deg,#0f1724,#071022);
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+/* =========================
+   Toast de copia
+========================= */
+.copy-toast {
+  position: absolute;
+  right: 14px;
+  top: -10px;
+  transform: translateY(-100%);
+  background: #111827;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.45);
+}
+
+.copy-toast.show {
+  opacity: 1;
+  transform: translateY(-120%);
+}
