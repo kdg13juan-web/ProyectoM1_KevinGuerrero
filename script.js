@@ -1,152 +1,588 @@
-// Generar color aleatorio
-function generarColorAleatorio() {
-  const r = Math.floor(Math.random() * 250);
-  const g = Math.floor(Math.random() * 250);
-  const b = Math.floor(Math.random() * 250);
-  
-  const hex = "#" + [r, g, b].map(x => {
-    const hex = x.toString(16);
-    return hex.length === 1 ? "0" + hex : hex;
-  }).join("").toUpperCase();
-  
-  const rgb = `rgb(${r}, ${g}, ${b})`;
-  
-  return { r, g, b, hex, rgb };
-}
+/**
+ * script.js
+ * Generador de paletas con tipos, brillo y saturación interactivos
+ *
+ * Versión educativa: variables y funciones con nombres claros,
+ * comentarios explicativos y estructura modular para facilitar el aprendizaje.
+ */
 
-// Mostrar paleta de colores
-function mostrarPaleta(colores) {
-  const contenedor = document.getElementById("contenedorColores");
-  contenedor.innerHTML = "";
-  
-  colores.forEach((color, index) => {
-    const colorItem = document.createElement("div");
-    colorItem.className = "color-item";
-    
-    const preview = document.createElement("div");
-    preview.className = "color-preview";
-    preview.style.backgroundColor = color.hex;
-    preview.title = `Click para copiar: ${color.hex}`;
-    preview.onclick = () => copiarAlPortapapeles(color.hex);
-    
-    const codigoHex = document.createElement("div");
-    codigoHex.className = "color-codigo";
-    codigoHex.innerHTML = `<span class="color-hex">${color.hex}</span>`;
-    
-    const codigoRgb = document.createElement("div");
-    codigoRgb.className = "color-codigo";
-    codigoRgb.innerHTML = `<span class="color-rgb">${color.rgb}</span>`;
-    
-    colorItem.appendChild(preview);
-    colorItem.appendChild(codigoHex);
-    colorItem.appendChild(codigoRgb);
-    
-    contenedor.appendChild(colorItem);
-  });
-  
-  document.getElementById("paleta").classList.remove("oculto");
-}
+/* =========================
+   Constantes y utilidades
+   ========================= */
 
-// Copiar código al portapapeles
-function copiarAlPortapapeles(texto) {
-  navigator.clipboard.writeText(texto).then(() => {
-    alert("✅ Copiado: " + texto);
-  });
-}
-const opcionesRuletas = {
-  1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
-    , 34, 35, 36,37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,71, 72, 73, 74, 75, 76, 77, 78, 79, 80
-    ,81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
-  2: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33
-    , 34, 35, 36,37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,71, 72, 73, 74, 75, 76, 77, 78, 79, 80
-    ,81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
-};
+/**
+ * Tiempo en ms que dura visible el toast
+ * Cambia esto si quieres que el mensaje dure más o menos.
+ */
+const TOAST_DURATION_MS = 1800;
 
-// Mostrar solo la ruleta seleccionada
-function mostrarRuleta(num) {
-  document.querySelectorAll(".ruleta").forEach(div => div.classList.add("oculto"));
-  document.getElementById("ruleta" + num).classList.remove("oculto");
-}
+/**
+ * Ciclos predefinidos para los botones interactivos.
+ * Los ciclos definen el orden en que se recorren los valores al hacer click.
+ */
+const BRIGHTNESS_CYCLE = ["Alto", "Medio", "Bajo"];
+const SATURATION_CYCLE = ["Alta", "Media", "Baja"];
 
-// Dibujar ruleta en un canvas
-function dibujarRuleta(num, anguloActual = 0) {
-  const canvas = document.getElementById("canvas" + num);
-  const ctx = canvas.getContext("2d");
-  const opciones = opcionesRuletas[num];
-  const numOpciones = opciones.length;
-  const anguloPorOpcion = (2 * Math.PI) / numOpciones;
+/* =========================
+   Funciones utilitarias
+   ========================= */
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < numOpciones; i++) {
-    ctx.beginPath();
-    ctx.moveTo(200, 200);
-    ctx.arc(200, 200, 200, anguloActual + i * anguloPorOpcion, anguloActual + (i + 1) * anguloPorOpcion);
-
-    // 🎨 Generar color dinámico según cantidad de opciones
-    let hue = (i * 360) / numOpciones; // distribuye colores en el círculo cromático
-    ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
-
-    ctx.fill();
-    ctx.stroke();
-
-    // Texto
-    ctx.save();
-    ctx.translate(200, 200);
-    ctx.rotate(anguloActual + (i + 0.5) * anguloPorOpcion);
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#000000";
-    ctx.font = "16px Arial";
-    ctx.fillText(opciones[i], 180, 10);
-    ctx.restore();
+/**
+ * showToast
+ * Muestra un mensaje breve en pantalla (toast).
+ * @param {string} message Texto a mostrar
+ */
+function showToast(message) {
+  let toastEl = document.getElementById("toast");
+  if (!toastEl) {
+    toastEl = document.createElement("div");
+    toastEl.id = "toast";
+    // Estilos inline mínimos para que funcione sin CSS adicional
+    toastEl.style.position = "fixed";
+    toastEl.style.bottom = "20px";
+    toastEl.style.left = "50%";
+    toastEl.style.transform = "translateX(-50%)";
+    toastEl.style.background = "rgba(0,0,0,0.85)";
+    toastEl.style.color = "#fff";
+    toastEl.style.padding = "10px 16px";
+    toastEl.style.borderRadius = "8px";
+    toastEl.style.zIndex = "10000";
+    toastEl.style.opacity = "0";
+    toastEl.style.transition = "opacity 0.25s, transform 0.25s";
+    document.body.appendChild(toastEl);
   }
+
+  // Actualiza el texto y muestra el toast
+  toastEl.textContent = message;
+  toastEl.style.opacity = "1";
+  toastEl.style.transform = "translateX(-50%) translateY(0)";
+
+  // Limpia cualquier timeout previo y programa el ocultado
+  clearTimeout(showToast._timeoutId);
+  showToast._timeoutId = setTimeout(() => {
+    toastEl.style.opacity = "0";
+    toastEl.style.transform = "translateX(-50%) translateY(8px)";
+  }, TOAST_DURATION_MS);
 }
 
+/**
+ * hslToRgb
+ * Convierte valores HSL a un array RGB [r,g,b] en rango 0-255.
+ * Implementación estándar para poder reconstruir HEX/RGB desde HSL.
+ * @param {number} h Hue 0-360
+ * @param {number} s Saturation 0-100
+ * @param {number} l Lightness 0-100
+ * @returns {number[]} [r, g, b]
+ */
+function hslToRgb(h, s, l) {
+  // Normalizar
+  const hue = ((h % 360) + 360) % 360;
+  const sat = s / 100;
+  const light = l / 100;
 
-// Girar ruleta
-function girarRuleta(num) {
-  const opciones = opcionesRuletas[num];
-  const numOpciones = opciones.length;
-  const anguloPorOpcion = (2 * Math.PI) / numOpciones;
+  if (sat === 0) {
+    const v = Math.round(light * 255);
+    return [v, v, v];
+  }
 
-  let destino = Math.random() * 20 * 2 * Math.PI;
-  let inicio = 30;
-  let duracion = 3000;
-  let tiempoInicio = null;
+  const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
+  const p = 2 * light - q;
+  const hk = hue / 360;
 
-  function animar(timestamp) {
-    if (!tiempoInicio) tiempoInicio = timestamp;
-    let progreso = (timestamp - tiempoInicio) / duracion;
+  const calc = (t) => {
+    let tt = t;
+    if (tt < 0) tt += 1;
+    if (tt > 1) tt -= 1;
+    if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+    if (tt < 1 / 2) return q;
+    if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+    return p;
+  };
 
-    if (progreso < 1) {
-      let anguloActual = inicio + destino * progreso;
-      dibujarRuleta(num, anguloActual);
-      requestAnimationFrame(animar);
-    } else {
-      let anguloFinal = destino;
-      dibujarRuleta(num, anguloFinal);
-      
-      // Calcular el índice ganador
-      let indiceGanador = Math.floor(((anguloFinal % (2 * Math.PI)) / anguloPorOpcion));
-      let numeroGanador = opcionesRuletas[num][indiceGanador];
-      
-      // Mostrar el número ganador
-      alert(`🎉 ¡GANASTE EL NÚMERO ${numeroGanador}! 🎉`);
-      
-      let colores = [];
-      // Generar 6 colores aleatorios
-      for (let i = 0; i < 6; i++) {
-        colores.push(generarColorAleatorio());
-      }
-      
-      // Mostrar paleta
-      mostrarPaleta(colores);
+  const r = Math.round(calc(hk + 1 / 3) * 255);
+  const g = Math.round(calc(hk) * 255);
+  const b = Math.round(calc(hk - 1 / 3) * 255);
+
+  return [r, g, b];
+}
+
+/**
+ * rgbToHex
+ * Convierte tres valores RGB (0-255) a una cadena HEX como "#AABBCC".
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {string} HEX
+ */
+function rgbToHex(r, g, b) {
+  return (
+    "#" +
+    [r, g, b]
+      .map((v) => v.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase()
+  );
+}
+
+/* =========================
+   Referencias al DOM
+   ========================= */
+
+/**
+ * Guardamos referencias a los elementos del DOM que usamos frecuentemente.
+ * Esto evita buscar elementos repetidamente y hace el código más claro.
+ */
+const btnGenerate = document.getElementById("generateBtn");
+const btnSave = document.getElementById("saveBtn");
+const containerPalette = document.getElementById("palette");
+const containerSavedPalettes = document.getElementById("savedPalettes");
+const selectPaletteSize = document.getElementById("paletteSize");
+const selectFormat = document.getElementById("format");
+const selectType = document.getElementById("style");
+const divStyleButtons = document.getElementById("styleButtons");
+const btnBrightness = document.getElementById("brightnessBtn");
+const btnSaturation = document.getElementById("saturationBtn");
+
+/* =========================
+   Estado de la aplicación
+   ========================= */
+
+/**
+ * basePalette
+ * Array con los colores base generados inicialmente.
+ * Cada elemento tiene la forma { h, s, l } (valores numéricos).
+ */
+let basePalette = [];
+
+/**
+ * displayedPalette
+ * Array con los colores que se muestran actualmente en pantalla.
+ * Cada elemento tiene { h, s, l, hex, rgb, hsl }.
+ */
+let displayedPalette = [];
+
+/**
+ * Valores actuales de brillo y saturación que aplicamos sobre basePalette.
+ * Si son null significa que no hay ajuste aplicado (tipo Normal).
+ */
+let currentBrightness = null; // "Alto" | "Medio" | "Bajo" | null
+let currentSaturation = null; // "Alta" | "Media" | "Baja" | null
+
+/* =========================
+   Funciones principales
+   ========================= */
+
+/**
+ * setButtonsForType
+ * Actualiza la visibilidad y el texto de los botones de Brillo y Saturación
+ * según el tipo seleccionado (Normal, Pastel, Neón, Joya, Muted, Tierra).
+ * No regenera la paleta: solo prepara los valores que se aplicarán.
+ * @param {string} type Valor del selectType
+ */
+function setButtonsForType(type) {
+  if (type === "normal") {
+    // Ocultar botones y resetear ajustes
+    divStyleButtons.style.display = "none";
+    currentBrightness = null;
+    currentSaturation = null;
+    return;
+  }
+
+  // Mostrar botones y asignar valores iniciales según el tipo
+  divStyleButtons.style.display = "flex";
+
+  switch (type) {
+    case "pastel":
+      currentBrightness = "Alto";
+      currentSaturation = "Baja";
+      break;
+    case "neon":
+      currentBrightness = "Alto";
+      currentSaturation = "Alta";
+      break;
+    case "joya":
+      currentBrightness = "Bajo";
+      currentSaturation = "Alta";
+      break;
+    case "muted":
+      currentBrightness = "Medio";
+      currentSaturation = "Baja";
+      break;
+    case "tierra":
+      currentBrightness = "Medio";
+      currentSaturation = "Media";
+      break;
+    default:
+      currentBrightness = "Medio";
+      currentSaturation = "Media";
+  }
+
+  // Actualizar texto visible en los botones
+  btnBrightness.textContent = "Brillo: " + currentBrightness;
+  btnSaturation.textContent = "Saturación: " + currentSaturation;
+}
+
+/**
+ * cycleBrightnessValue
+ * Cambia el valor de brillo al siguiente del ciclo y actualiza el texto del botón.
+ */
+function cycleBrightnessValue() {
+  if (!currentBrightness) currentBrightness = BRIGHTNESS_CYCLE[0];
+  const index = BRIGHTNESS_CYCLE.indexOf(currentBrightness);
+  currentBrightness = BRIGHTNESS_CYCLE[(index + 1) % BRIGHTNESS_CYCLE.length];
+  btnBrightness.textContent = "Brillo: " + currentBrightness;
+}
+
+/**
+ * cycleSaturationValue
+ * Cambia el valor de saturación al siguiente del ciclo y actualiza el texto del botón.
+ */
+function cycleSaturationValue() {
+  if (!currentSaturation) currentSaturation = SATURATION_CYCLE[0];
+  const index = SATURATION_CYCLE.indexOf(currentSaturation);
+  currentSaturation = SATURATION_CYCLE[(index + 1) % SATURATION_CYCLE.length];
+  btnSaturation.textContent = "Saturación: " + currentSaturation;
+}
+
+/* =========================
+   Generación de colores
+   ========================= */
+
+/**
+ * generateBaseColor
+ * Crea un color base aleatorio y devuelve un objeto con h, s, l.
+ * También devuelve hex/rgb/hsl por conveniencia.
+ * @returns {{h:number,s:number,l:number,hex:string,rgb:string,hsl:string}}
+ */
+function generateBaseColor() {
+  // Generamos RGB aleatorio
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+
+  // Convertimos RGB a HSL (algoritmo estándar)
+  const rN = r / 255;
+  const gN = g / 255;
+  const bN = b / 255;
+  const max = Math.max(rN, gN, bN);
+  const min = Math.min(rN, gN, bN);
+  let h = 0;
+  let s = 0;
+  let l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case rN:
+        h = (gN - bN) / d + (gN < bN ? 6 : 0);
+        break;
+      case gN:
+        h = (bN - rN) / d + 2;
+        break;
+      case bN:
+        h = (rN - gN) / d + 4;
+        break;
     }
+    h /= 6;
   }
 
-  requestAnimationFrame(animar);
+  // Convertir a escala humana
+  h = Math.round(h * 360);
+  s = Math.round(s * 100);
+  l = Math.round(l * 100);
+
+  // Reconstruir RGB/HEX desde HSL para consistencia
+  const rgbArr = hslToRgb(h, s, l);
+  const hex = rgbToHex(rgbArr[0], rgbArr[1], rgbArr[2]);
+  const rgb = `rgb(${rgbArr[0]}, ${rgbArr[1]}, ${rgbArr[2]})`;
+  const hsl = `hsl(${h}, ${s}%, ${l}%)`;
+
+  return { h, s, l, hex, rgb, hsl };
 }
 
-// Inicializar ruletas
-dibujarRuleta(1);
-dibujarRuleta(2);
+/* =========================
+   Aplicar ajustes sobre la paleta base
+   ========================= */
+
+/**
+ * applyBrightnessAndSaturation
+ * Toma la basePalette (h,s,l) y aplica los ajustes actuales de brillo y saturación.
+ * Actualiza displayedPalette con los valores hex/rgb/hsl resultantes.
+ */
+function applyBrightnessAndSaturation() {
+  if (!basePalette || basePalette.length === 0) return;
+
+  displayedPalette = basePalette.map((baseColor) => {
+    let h = baseColor.h;
+    let s = baseColor.s;
+    let l = baseColor.l;
+
+    // Ajuste de brillo
+    if (currentBrightness === "Alto") {
+      l = Math.min(90, l + 20);
+    } else if (currentBrightness === "Medio") {
+      l = 50;
+    } else if (currentBrightness === "Bajo") {
+      l = Math.max(10, l - 20);
+    }
+
+    // Ajuste de saturación
+    if (currentSaturation === "Alta") {
+      s = Math.min(100, s + 30);
+    } else if (currentSaturation === "Media") {
+      s = 50;
+    } else if (currentSaturation === "Baja") {
+      s = Math.max(0, s - 30);
+    }
+
+    // Reconstruir valores de salida
+    const rgbArr = hslToRgb(h, s, l);
+    const hex = rgbToHex(rgbArr[0], rgbArr[1], rgbArr[2]);
+    const rgb = `rgb(${rgbArr[0]}, ${rgbArr[1]}, ${rgbArr[2]})`;
+    const hsl = `hsl(${h}, ${s}%, ${l}%)`;
+
+    return { h, s, l, hex, rgb, hsl };
+  });
+}
+
+/* =========================
+   Renderizado en DOM
+   ========================= */
+
+/**
+ * renderDisplayedPalette
+ * Dibuja displayedPalette en el DOM usando el formato seleccionado.
+ * Cada caja copia su valor al portapapeles al hacer click.
+ */
+function renderDisplayedPalette() {
+  const format = selectFormat.value;
+  containerPalette.innerHTML = ""; // Limpiar antes de renderizar
+
+  displayedPalette.forEach((color) => {
+    const box = document.createElement("div");
+    box.className = "color-box";
+    box.style.background = color.hex;
+
+    const info = document.createElement("div");
+    info.className = "color-info";
+    info.innerHTML = format === "hexrgb" ? `${color.hex}<br>${color.rgb}` : color.hsl;
+
+    box.appendChild(info);
+
+    // Copiar al portapapeles al hacer click
+    box.addEventListener("click", async () => {
+      const textToCopy = format === "hexrgb" ? `${color.hex} ${color.rgb}` : color.hsl;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        showToast("📋 Copiado: " + textToCopy);
+      } catch (err) {
+        showToast("❌ No se pudo copiar");
+      }
+    });
+
+    containerPalette.appendChild(box);
+  });
+  // Animación al copiar
+      document.querySelectorAll('.color-box').forEach(box => {
+      box.addEventListener('click', function() {
+        // Copia el color (puedes ajustar esto según tu estructura)
+        const color = this.dataset.hex || this.textContent;
+        navigator.clipboard.writeText(color);
+
+        // Animación
+        this.classList.add('copied');
+        setTimeout(() => this.classList.remove('copied'), 400);
+      });
+    });
+}
+
+
+/* =========================
+   Operaciones de paleta
+   ========================= */
+
+/**
+ * generatePalette
+ * Genera una nueva basePalette con la cantidad solicitada y aplica ajustes actuales.
+ * No mezcla la lógica: primero genera la base, luego aplica ajustes y finalmente renderiza.
+ * @param {number} size Cantidad de colores a generar
+ */
+function generatePalette(size) {
+  basePalette = Array.from({ length: size }, () => {
+    const base = generateBaseColor();
+    return { h: base.h, s: base.s, l: base.l };
+  });
+
+  // Aplicar ajustes (si los hay) y renderizar
+  applyBrightnessAndSaturation();
+  renderDisplayedPalette();
+  showToast("🎨 Nueva paleta generada");
+}
+
+/**
+ * changePaletteSize
+ * Ajusta el tamaño de la paleta sin perder los colores existentes cuando es posible.
+ * Si la paleta no existe, genera una nueva.
+ * @param {number} newSize
+ */
+function changePaletteSize(newSize) {
+  if (!basePalette || basePalette.length === 0) {
+    generatePalette(newSize);
+    return;
+  }
+
+  const currentSize = basePalette.length;
+  if (newSize > currentSize) {
+    // Añadir nuevos colores base
+    const toAdd = newSize - currentSize;
+    for (let i = 0; i < toAdd; i++) {
+      const base = generateBaseColor();
+      basePalette.push({ h: base.h, s: base.s, l: base.l });
+    }
+  } else if (newSize < currentSize) {
+    // Recortar la paleta
+    basePalette = basePalette.slice(0, newSize);
+  }
+
+  applyBrightnessAndSaturation();
+  renderDisplayedPalette();
+  showToast("🔢 Tamaño ajustado a " + newSize);
+}
+
+/**
+ * savePaletteToDOM
+ * Guarda la paleta actual en la sección de paletas guardadas (solo DOM).
+ * No persiste en localStorage en esta versión educativa.
+ */
+function savePaletteToDOM() {
+  if (!displayedPalette || displayedPalette.length === 0) {
+    showToast("⚠️ No hay colores para guardar");
+    return;
+  }
+
+  const paletteWrapper = document.createElement("div");
+  paletteWrapper.className = "palette";
+
+  displayedPalette.forEach((color) => {
+    const item = document.createElement("div");
+    item.style.display = "flex";
+    item.style.flexDirection = "column";
+    item.style.alignItems = "center";
+
+    const box = document.createElement("div");
+    box.className = "color-box";
+    box.style.width = "100px";
+    box.style.height = "100px";
+    box.style.borderRadius = "6px";
+    box.style.border = "1px solid #ccc";
+    box.style.background = color.hex;
+
+    const formats = document.createElement("div");
+    formats.className = "formats";
+    formats.style.marginTop = "6px";
+    formats.style.fontSize = "12px";
+    formats.style.textAlign = "center";
+    formats.appendChild(document.createTextNode(color.hex));
+    formats.appendChild(document.createElement("br"));
+    formats.appendChild(document.createTextNode(color.rgb));
+    formats.appendChild(document.createElement("br"));
+    formats.appendChild(document.createTextNode(color.hsl));
+
+    item.appendChild(box);
+    item.appendChild(formats);
+    paletteWrapper.appendChild(item);
+  });
+
+  containerSavedPalettes.appendChild(paletteWrapper);
+  showToast("💾 Paleta guardada");
+}
+
+/* =========================
+   Eventos de UI
+   ========================= */
+
+// Generar nueva paleta al hacer click
+btnGenerate.addEventListener("click", () => {
+  const size = parseInt(selectPaletteSize.value, 10) || 6;
+  generatePalette(size);
+});
+
+// Cambiar tamaño de paleta desde el select
+selectPaletteSize.addEventListener("change", () => {
+  const newSize = parseInt(selectPaletteSize.value, 10) || 6;
+  changePaletteSize(newSize);
+});
+
+// Cambiar formato de visualización (HEX/RGB o HSL)
+selectFormat.addEventListener("change", () => {
+  renderDisplayedPalette();
+  showToast("🔤 Formato cambiado");
+});
+
+// Cambiar tipo (Normal, Pastel, Neón, Joya, Muted, Tierra)
+// No regenera la paleta: aplica ajustes sobre la paleta base existente
+selectType.addEventListener("change", () => {
+  const type = selectType.value;
+  setButtonsForType(type);
+
+  if (type === "normal") {
+    // Revertir displayedPalette a basePalette sin ajustes
+    displayedPalette = basePalette.map((base) => {
+      const rgbArr = hslToRgb(base.h, base.s, base.l);
+      return {
+        h: base.h,
+        s: base.s,
+        l: base.l,
+        hex: rgbToHex(rgbArr[0], rgbArr[1], rgbArr[2]),
+        rgb: `rgb(${rgbArr[0]}, ${rgbArr[1]}, ${rgbArr[2]})`,
+        hsl: `hsl(${base.h}, ${base.s}%, ${base.l}%)`,
+      };
+    });
+    renderDisplayedPalette();
+    showToast("🔤 Tipo: Normal (sin ajustes)");
+    return;
+  }
+
+  // Para otros tipos, aplicar ajustes y renderizar
+  applyBrightnessAndSaturation();
+  renderDisplayedPalette();
+  showToast("🔤 Tipo cambiado: " + type);
+});
+
+// Brillo interactivo: ciclar valor y aplicar sobre la paleta base
+btnBrightness.addEventListener("click", () => {
+  cycleBrightnessValue();
+  applyBrightnessAndSaturation();
+  renderDisplayedPalette();
+  showToast("☀️ Brillo cambiado a " + currentBrightness);
+});
+
+// Saturación interactiva: ciclar valor y aplicar sobre la paleta base
+btnSaturation.addEventListener("click", () => {
+  cycleSaturationValue();
+  applyBrightnessAndSaturation();
+  renderDisplayedPalette();
+  showToast("🎚️ Saturación cambiada a " + currentSaturation);
+});
+
+// Guardar paleta actual
+btnSave.addEventListener("click", () => {
+  savePaletteToDOM();
+});
+
+/* =========================
+   Inicialización
+   ========================= */
+
+/**
+ * init
+ * Función que se ejecuta al cargar el script para dejar la UI en un estado válido.
+ * - Configura botones según el tipo por defecto
+ * - Genera una paleta inicial
+ */
+(function init() {
+  setButtonsForType(selectType.value || "normal");
+  const initialSize = parseInt(selectPaletteSize.value, 10) || 6;
+  generatePalette(initialSize);
+})();

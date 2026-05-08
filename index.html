@@ -1,51 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>PALETA</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Paletas con Estilos</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-    
 <body>
-    <header>
-        <h1>PALETA DE COLORES</h1>
-    </header>
+  <div class="container">
+    <!-- Panel izquierdo -->
+    <aside class="sidebar">
+      <h2>Acciones</h2>
+
+      <label for="paletteSize">Tamaño de paleta:</label>
+      <select id="paletteSize">
+        <option value="6">6 colores</option>
+        <option value="8">8 colores</option>
+        <option value="9">9 colores</option>
+      </select>
+
+      <label for="format">Formato:</label>
+      <select id="format">
+        <option value="hexrgb">HEX / RGB</option>
+        <option value="hsl">HSL</option>
+      </select>
+
+      <label for="style">Tipo:</label>
+      <select id="style">
+        <option value="normal">Normal</option>
+        <option value="pastel">Pastel</option>
+        <option value="neon">Neón</option>
+        <option value="joya">Joya</option>
+        <option value="muted">Muted</option>
+        <option value="tierra">Tierra</option>
+      </select>
+
+      <!-- Botones dinámicos -->
+      <div id="styleButtons" class="style-buttons" style="display:none;">
+        <button id="brightnessBtn">Brillo:</button>
+        <button id="saturationBtn">Saturación:</button>
+      </div>
+
+      <button id="generateBtn">🎨 Generar Paleta</button>
+      <button id="saveBtn">💾 Guardar Paleta</button>
+    </aside>
+
+    <!-- Panel central -->
+    <main class="main">
+      <h2 class="title">Paleta Actual</h2>
+      <div class="palette" id="palette"></div>
+    </main>
+  
+  <!-- Panel inferior -->
+   <article>
+        </div><h2 class="title-saved-palettes">Paletas Guardadas</h2>
+        <div class="saved-palettes" id="savedPalettes"></div>
+    </article>
+
+  <footer class="bottom">
+        <p class="footer-hint">
+            <span class="hint-text">Haz clic en un color para copiar.</span>
+            <span class="hint-sep">·</span>
+            <span class="hint-text">Presiona</span>
+            <kbd class="footer-key">F5</kbd>
+            <span class="hint-text">o usa el botón</span>
+            <kbd class="footer-key">🎨 Generar Paleta</kbd>
+            <span class="hint-sep">·</span>
+            <span class="hint-text">Pulsa</span>
+            <kbd class="footer-key">💾 Guardar</kbd>
+            <span class="hint-text">para guardar la paleta.</span>
+        </p>
 
 
-    <main>
-   
-    
+  </footer>
 
-    
-        <div class="botones">
-            <button onclick="mostrarRuleta(1)">AZAR</button>
-            <button onclick="mostrarRuleta(2)">CONJUNTO</button>
-        </div>
-
-        <div id="ruleta1" class="ruleta">
-            <canvas id="canvas1" width="400" height="400"></canvas>
-            <button onclick="girarRuleta(1)">Girar</button>
-        </div>
-
-        <div id="ruleta2" class="ruleta oculto">
-            <canvas id="canvas2" width="400" height="400"></canvas>
-            <button onclick="girarRuleta(2)">Girar</button>
-        </div>
-
-        <div id="paleta" class="paleta oculto">
-            <h2>🎨 Paleta de Colores Ganadora</h2>
-            <div id="contenedorColores" class="contenedor-colores"></div>
-        </div>
-    
-
-<script src="script.js"></script>
-
-    <footer>
-        <p>© 2026 PALETA DE COLORES. Todos los derechos reservados.</p>
-
-
+  <script src="script.js"></script>
 </body>
 </html>
