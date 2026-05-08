@@ -483,11 +483,13 @@ function savePaletteToDOM() {
     formats.style.marginTop = "6px";
     formats.style.fontSize = "12px";
     formats.style.textAlign = "center";
-    formats.appendChild(document.createTextNode(color.hex));
+    
+    formats.appendChild(document.createTextNode(color.hsl));
+    formats.appendChild(document.createElement("br"));
+    formats.appendChild(document.createTextNode(" hex  " + color.hex) );
     formats.appendChild(document.createElement("br"));
     formats.appendChild(document.createTextNode(color.rgb));
-    formats.appendChild(document.createElement("br"));
-    formats.appendChild(document.createTextNode(color.hsl));
+  
 
     item.appendChild(box);
     item.appendChild(formats);
@@ -586,3 +588,10 @@ btnSave.addEventListener("click", () => {
   const initialSize = parseInt(selectPaletteSize.value, 10) || 6;
   generatePalette(initialSize);
 })();
+
+/*color dark mode*/
+const toggle = document.getElementById("themeToggle");
+
+  toggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });

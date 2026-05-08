@@ -27,8 +27,8 @@ body {
    Reset y tipografía
 ========================= */
 .icono {
-  width: 20px;
-  height: 20px;
+  width: 200px;
+  height: 2000px;
   fill: var(--color-gray);
   transition: fill 0.2s ease;
 }
@@ -53,7 +53,19 @@ body {
   flex: 1;
   padding: 20px;
   text-align: center;
+
+  /* Fondo con imagen */
+  background-image: url("../icons/fondo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column; /* Mantiene los elementos uno debajo del otro */
+  justify-content: center; /* Centra verticalmente */
+  align-items: center; /* Centra horizontalmente */
+  min-height: 100vh; /* Ocupa toda la altura visible */
 }
+
 
 /* =========================
    Botones y selects
@@ -99,7 +111,10 @@ button:hover {
   gap: 20px;
   justify-content: center;
   margin-top: 20px;
+
 }
+
+
 
 .color-box {
   width: 180px;
@@ -149,7 +164,8 @@ h2.title {
   padding: 10px 20px;
   width: fit-content;
   display: inline-block;
-  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  background: var(--color-white);
+  font-size: 28px;
 }
 
 .title-saved-palettes {
@@ -278,4 +294,116 @@ footer.bottom {
 .copy-toast.show {
   opacity: 1;
   transform: translateY(-120%);
+}
+
+  /* Tema oscuro */
+  body.dark {
+    background: #121212;
+    color: white;
+  }
+
+  /* Botón switch */
+.switch {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 30px;
+  background: #ccc;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  transition: background 0.3s;
+  z-index: 1000;
+}
+
+.switch::before {
+  content: "☀️";
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+body.dark .switch {
+  background: #444;
+}
+
+body.dark .switch::before {
+  content: "🌙";
+  transform: translateX(30px);
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark {
+  background: #121212;
+  color: #ffffff;
+}
+
+/* Sidebar */
+body.dark .sidebar {
+  background: #1e1e1e;
+  color: white;
+  border-right: 2px solid #444;
+}
+
+/* Container */
+body.dark .container {
+  border-color: #444;
+}
+
+/* Footer */
+body.dark footer.bottom {
+  background: #1e1e1e;
+  color: white;
+}
+
+/* Título paletas guardadas */
+body.dark .title-saved-palettes {
+  background: #1e1e1e;
+  color: white;
+}
+
+/* Texto footer */
+body.dark .footer-hint {
+  background: #1e1e1e;
+}
+
+body.dark .footer-hint .hint-text {
+  color: #ddd;
+}
+
+/* Selects y botones */
+body.dark button,
+body.dark select {
+  background: #333;
+  color: white;
+}
+
+body.dark button:hover {
+  background: #555;
+}
+
+/* Información del color */
+body.dark .color-info {
+  background: rgba(0,0,0,0.7);
+  color: white;
+}
+
+/* Main */
+body.dark .main {
+  background-color: #181818;
+}
+
+body.dark .title {
+  background-color: #000000;
 }
