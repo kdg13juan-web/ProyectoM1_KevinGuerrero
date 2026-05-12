@@ -32,38 +32,28 @@ const SATURATION_CYCLE = ["Alta", "Media", "Baja"];
  * Muestra un mensaje breve en pantalla (toast).
  * @param {string} message Texto a mostrar
  */
+
 function showToast(message) {
   let toastEl = document.getElementById("toast");
   if (!toastEl) {
     toastEl = document.createElement("div");
     toastEl.id = "toast";
-    // Estilos inline mínimos para que funcione sin CSS adicional
-    toastEl.style.position = "fixed";
-    toastEl.style.bottom = "20px";
-    toastEl.style.left = "50%";
-    toastEl.style.transform = "translateX(-50%)";
-    toastEl.style.background = "rgba(0,0,0,0.85)";
-    toastEl.style.color = "#fff";
-    toastEl.style.padding = "10px 16px";
-    toastEl.style.borderRadius = "8px";
-    toastEl.style.zIndex = "10000";
-    toastEl.style.opacity = "0";
-    toastEl.style.transition = "opacity 0.25s, transform 0.25s";
     document.body.appendChild(toastEl);
   }
 
   // Actualiza el texto y muestra el toast
   toastEl.textContent = message;
-  toastEl.style.opacity = "1";
-  toastEl.style.transform = "translateX(-50%) translateY(0)";
+  toastEl.classList.add("show");
 
   // Limpia cualquier timeout previo y programa el ocultado
   clearTimeout(showToast._timeoutId);
   showToast._timeoutId = setTimeout(() => {
-    toastEl.style.opacity = "0";
-    toastEl.style.transform = "translateX(-50%) translateY(8px)";
+    toastEl.classList.remove("show");
   }, TOAST_DURATION_MS);
 }
+
+
+
 
 /**
  * hslToRgb
@@ -220,6 +210,7 @@ function setButtonsForType(type) {
   // Actualizar texto visible en los botones
   btnBrightness.textContent = "Brillo: " + currentBrightness;
   btnSaturation.textContent = "Saturación: " + currentSaturation;
+
 }
 
 /**
@@ -298,7 +289,7 @@ function generateBaseColor() {
   const rgb = `rgb(${rgbArr[0]}, ${rgbArr[1]}, ${rgbArr[2]})`;
   const hsl = `hsl(${h}, ${s}%, ${l}%)`;
 
-  return { h, s, l, hex, rgb, hsl };
+  return { h, s, l, hex, rgb, hsl,locked: false };
 }
 
 /* =========================
@@ -317,7 +308,8 @@ function applyBrightnessAndSaturation() {
     let h = baseColor.h;
     let s = baseColor.s;
     let l = baseColor.l;
-
+// Si el color NO está bloqueado, aplicar cambios
+    if (!baseColor.locked) {
     // Ajuste de brillo
     if (currentBrightness === "Alto") {
       l = Math.min(90, l + 20);
@@ -335,6 +327,7 @@ function applyBrightnessAndSaturation() {
     } else if (currentSaturation === "Baja") {
       s = Math.max(0, s - 30);
     }
+  }
 
     // Reconstruir valores de salida
     const rgbArr = hslToRgb(h, s, l);
@@ -342,7 +335,7 @@ function applyBrightnessAndSaturation() {
     const rgb = `rgb(${rgbArr[0]}, ${rgbArr[1]}, ${rgbArr[2]})`;
     const hsl = `hsl(${h}, ${s}%, ${l}%)`;
 
-    return { h, s, l, hex, rgb, hsl };
+    return { h, s, l, hex, rgb, hsl, locked: baseColor.locked };
   });
 }
 
@@ -357,20 +350,35 @@ function applyBrightnessAndSaturation() {
  */
 function renderDisplayedPalette() {
   const format = selectFormat.value;
-  containerPalette.innerHTML = ""; // Limpiar antes de renderizar
+  containerPalette.innerHTML = "";
 
-  displayedPalette.forEach((color) => {
+  displayedPalette.forEach((color, index) => {
     const box = document.createElement("div");
     box.className = "color-box";
     box.style.background = color.hex;
+    box.style.position = "relative"; // Para posicionar el icono
 
     const info = document.createElement("div");
     info.className = "color-info";
     info.innerHTML = format === "hexrgb" ? `${color.hex}<br>${color.rgb}` : color.hsl;
 
-    box.appendChild(info);
+    // Agregar icono de candado
+    const lockIcon = document.createElement("button");
+    lockIcon.className = "lock-icon";
+    lockIcon.innerHTML = color.locked ? "🔒" : "🔓";
 
-    // Copiar al portapapeles al hacer click
+    lockIcon.addEventListener("click", (e) => {
+      e.stopPropagation(); // Evitar copiar al hacer click en el candado
+      basePalette[index].locked = !basePalette[index].locked;
+      displayedPalette[index].locked = !displayedPalette[index].locked;
+      renderDisplayedPalette(); // Redibujar para actualizar el icono
+      showToast(basePalette[index].locked ? "🔒 Color bloqueado" : "🔓 Color desbloqueado");
+    });
+
+    box.appendChild(info);
+    box.appendChild(lockIcon);
+
+    // Copiar al portapapeles (click en el color, no en el candado)
     box.addEventListener("click", async () => {
       const textToCopy = format === "hexrgb" ? `${color.hex} ${color.rgb}` : color.hsl;
       try {
@@ -383,6 +391,9 @@ function renderDisplayedPalette() {
 
     containerPalette.appendChild(box);
   });
+}
+
+
   // Animación al copiar
       document.querySelectorAll('.color-box').forEach(box => {
       box.addEventListener('click', function() {
@@ -395,7 +406,7 @@ function renderDisplayedPalette() {
         setTimeout(() => this.classList.remove('copied'), 400);
       });
     });
-}
+
 
 
 /* =========================
@@ -409,12 +420,25 @@ function renderDisplayedPalette() {
  * @param {number} size Cantidad de colores a generar
  */
 function generatePalette(size) {
-  basePalette = Array.from({ length: size }, () => {
-    const base = generateBaseColor();
-    return { h: base.h, s: base.s, l: base.l };
-  });
+  // Si ya hay paleta y queremos más colores, generar solo los nuevos
+  // Si queremos menos, recortar conservando bloqueados
+  
+  if (basePalette.length === 0) {
+    basePalette = Array.from({ length: size }, () => {
+      const base = generateBaseColor();
+      return { h: base.h, s: base.s, l: base.l, locked: false };
+    });
+  } else {
+    // Regenerar solo los colores NO bloqueados
+    basePalette = basePalette.map((color) => {
+      if (color.locked) {
+        return color; // Mantener bloqueado
+      }
+      const base = generateBaseColor();
+      return { h: base.h, s: base.s, l: base.l, locked: false };
+    });
+  }
 
-  // Aplicar ajustes (si los hay) y renderizar
   applyBrightnessAndSaturation();
   renderDisplayedPalette();
   showToast("🎨 Nueva paleta generada");
@@ -434,14 +458,12 @@ function changePaletteSize(newSize) {
 
   const currentSize = basePalette.length;
   if (newSize > currentSize) {
-    // Añadir nuevos colores base
     const toAdd = newSize - currentSize;
     for (let i = 0; i < toAdd; i++) {
       const base = generateBaseColor();
-      basePalette.push({ h: base.h, s: base.s, l: base.l });
+      basePalette.push({ h: base.h, s: base.s, l: base.l, locked: false });
     }
   } else if (newSize < currentSize) {
-    // Recortar la paleta
     basePalette = basePalette.slice(0, newSize);
   }
 
@@ -567,6 +589,23 @@ btnSaturation.addEventListener("click", () => {
   renderDisplayedPalette();
   showToast("🎚️ Saturación cambiada a " + currentSaturation);
 });
+
+// En basePalette, cada color será: { h, s, l, locked: false }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Guardar paleta actual
 btnSave.addEventListener("click", () => {
