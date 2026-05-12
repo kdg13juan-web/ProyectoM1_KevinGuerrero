@@ -55,7 +55,7 @@ body {
   text-align: center;
 
   /* Fondo con imagen */
-  background-image: url("../icons/fondo.png");
+  background-image: url("../img/fondo.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -102,6 +102,9 @@ button:hover {
   background: #495057;
 }
 
+
+
+
 /* =========================
    Paletas de colores
 ========================= */
@@ -127,6 +130,7 @@ button:hover {
   align-items: center;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(.4,2,.3,1), box-shadow 0.2s;
+  box-shadow: none;
 }
 
 .color-box:hover {
@@ -406,4 +410,62 @@ body.dark .main {
 
 body.dark .title {
   background-color: #000000;
+}
+/* toast dark */
+body.dark .copy-toast {
+  background: #fffefe;
+  color: #000000;
+} 
+
+/*toast*/
+
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/*lock-icon*/
+.lock-icon {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  justify-content: flex-start
+  
+}
+
+
+.lock-icon:hover {
+  transform: scale(1.-20);
+}
+
+.lock-icon:active {
+  transform: scale(0.95);
+}
+button.lock-icon {
+  background: transparent !important; /* fuerza transparencia */
+  box-shadow: none !important;        /* elimina cualquier sombra */
+  display: flex;
+  justify-content: flex-start; /* alinea a la izquierda */
 }
