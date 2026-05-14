@@ -356,17 +356,34 @@ function renderDisplayedPalette() {
     const box = document.createElement("div");
     box.className = "color-box";
     box.style.background = color.hex;
-    box.style.position = "relative"; // Para posicionar el icono
+    box.style.position = "relative"; // Para posicionar elementos internos
 
+    // Información del color
     const info = document.createElement("div");
     info.className = "color-info";
     info.innerHTML = format === "hexrgb" ? `${color.hex}<br>${color.rgb}` : color.hsl;
 
-    // Agregar icono de candado
+    // Tooltip para copiar color
+    const colorTooltip = document.createElement("span");
+    colorTooltip.className = "tooltip color-tooltip";
+    colorTooltip.textContent = "Haz clic para copiar el color";
+    box.appendChild(colorTooltip);
+
+    // Candado + tooltip
     const lockIcon = document.createElement("button");
     lockIcon.className = "lock-icon";
     lockIcon.innerHTML = color.locked ? "🔒" : "🔓";
 
+    const lockTooltip = document.createElement("span");
+    lockTooltip.className = "tooltip lock-tooltip";
+    lockTooltip.textContent = "Haz clic para bloquear color";
+
+    const lockWrapper = document.createElement("div");
+    lockWrapper.className = "lock-wrapper";
+    lockWrapper.appendChild(lockIcon);
+    lockWrapper.appendChild(lockTooltip);
+
+    // Evento del candado
     lockIcon.addEventListener("click", (e) => {
       e.stopPropagation(); // Evitar copiar al hacer click en el candado
       basePalette[index].locked = !basePalette[index].locked;
@@ -375,23 +392,28 @@ function renderDisplayedPalette() {
       showToast(basePalette[index].locked ? "🔒 Color bloqueado" : "🔓 Color desbloqueado");
     });
 
+    // Agregar elementos al box
     box.appendChild(info);
-    box.appendChild(lockIcon);
+    box.appendChild(lockWrapper);
 
-    // Copiar al portapapeles (click en el color, no en el candado)
+    // Evento de copiar color
     box.addEventListener("click", async () => {
       const textToCopy = format === "hexrgb" ? `${color.hex} ${color.rgb}` : color.hsl;
       try {
         await navigator.clipboard.writeText(textToCopy);
+        box.classList.add('copied');
+        setTimeout(() => box.classList.remove('copied'), 400);
         showToast("📋 Copiado: " + textToCopy);
       } catch (err) {
         showToast("❌ No se pudo copiar");
       }
     });
 
+    // Finalmente agregar el box al contenedor
     containerPalette.appendChild(box);
   });
 }
+
 
 
   // Animación al copiar
@@ -590,18 +612,6 @@ btnSaturation.addEventListener("click", () => {
   showToast("🎚️ Saturación cambiada a " + currentSaturation);
 });
 
-// En basePalette, cada color será: { h, s, l, locked: false }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -634,3 +644,5 @@ const toggle = document.getElementById("themeToggle");
   toggle.addEventListener("click", () => {
     document.body.classList.toggle("dark");
   });
+
+
