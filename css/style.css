@@ -40,6 +40,14 @@ body {
   border: 2px solid var(--color-black);
   border-radius: 8px;
 }
+aside.sidebar{
+  margin: 0%;
+  padding: 1.5%;
+  align-items: flex-start;
+
+  }
+
+
 
 .sidebar {
   width: 250px;
@@ -47,6 +55,7 @@ body {
   padding: 20px;
   border-right: 2px solid var(--color-black);
   font-size: 25px;
+
 }
 
 .main {
@@ -111,7 +120,7 @@ button:hover {
 .palette {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 2.5rem;
   justify-content: center;
   margin-top: 20px;
 
@@ -163,11 +172,15 @@ button:hover {
 /* =========================
    Títulos
 ========================= */
+h2{
+  margin: 0rem 0.5rem ;
+
+}
 h2.title {
-  margin: 0 auto 20px;
+  margin: 1px 0px ;
   border: 1px solid var(--color-black);
   border-radius: 999px;
-  padding: 10px 20px;
+  padding: 1%;
   width: fit-content;
   display: inline-block;
   background: var(--color-white);
@@ -498,7 +511,7 @@ button.lock-icon {
 
 .color-tooltip {
   bottom: auto;
-  top: -40px;
+  top: -28px;
   left: 50%;
   transform: translateX(-50%);
 }
