@@ -28,7 +28,7 @@ body {
 ========================= */
 .icono {
   width: 200px;
-  height: 2000px;
+  height: 200px;
   fill: var(--color-gray);
   transition: fill 0.2s ease;
 }
@@ -139,8 +139,10 @@ button:hover {
 }
 
 .color-box.copied {
-  animation: copied-pop 0.1s;
+  animation: copied-pop 0.4s;
 }
+
+
 
 @keyframes copied-pop {
   0%   { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.18);}
@@ -416,6 +418,15 @@ body.dark .copy-toast {
   background: #fffefe;
   color: #000000;
 } 
+body.dark .lock-tooltip {
+  background: #000000;
+  color: #ffffff;
+} 
+
+body.dark .color-tooltip {
+  background: #000000;
+  color: #ffffff;
+} 
 
 /*toast*/
 
@@ -442,30 +453,72 @@ body.dark .copy-toast {
 /*lock-icon*/
 .lock-icon {
   position: absolute;
-  top: -10px;
-  right: 0;
+  top: -5px;
+  right: 5px;
   border: none;
-  border-radius: 99px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
-  padding: 0;
+  font-size: 14px;
+  padding: 2px;
   background: transparent;
   box-shadow: none;
-  justify-content: flex-start
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
 }
 
-
 .lock-icon:hover {
-  transform: scale(1.-20);
+  transform: scale(1.2);
 }
 
 .lock-icon:active {
   transform: scale(0.95);
 }
+
 button.lock-icon {
-  background: transparent !important; /* fuerza transparencia */
-  box-shadow: none !important;        /* elimina cualquier sombra */
-  display: flex;
-  justify-content: flex-start; /* alinea a la izquierda */
+  background: transparent !important;
+  box-shadow: none !important;
 }
+
+.tooltip {
+  visibility: hidden;
+  background: #ffffff;
+  color: #000000;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.color-tooltip {
+  bottom: auto;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lock-wrapper {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 10;
+}
+
+.lock-tooltip {
+  top: 100%;
+  right: 25px;
+  margin-top: 4px;
+}
+
+.color-box:hover .color-tooltip,
+.lock-wrapper:hover .lock-tooltip {
+  visibility: visible;
+}
+
+
