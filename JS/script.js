@@ -361,7 +361,23 @@ function renderDisplayedPalette() {
     // Información del color
     const info = document.createElement("div");
     info.className = "color-info";
-    info.innerHTML = format === "hexrgb" ? `${color.hex}<br>${color.rgb}` : color.hsl;
+    switch (format) {
+    case "hex":
+    info.textContent = color.hex;
+    textToCopy = color.hex;
+    break;
+     case "rgb":
+    info.textContent = color.rgb;
+    textToCopy = color.rgb;
+    break;
+     case "hsl":
+    info.textContent = color.hsl;
+    textToCopy = color.hsl;
+    break;
+    default:
+    info.textContent = color.hsl; // fallback
+    
+}
 
     // Tooltip para copiar color
     const colorTooltip = document.createElement("span");
@@ -398,7 +414,19 @@ function renderDisplayedPalette() {
 
     // Evento de copiar color
     box.addEventListener("click", async () => {
-      const textToCopy = format === "hexrgb" ? `${color.hex} ${color.rgb}` : color.hsl;
+        let textToCopy;
+          switch (format) {
+          case "hex":
+        textToCopy = color.hex;
+          break;
+          case "rgb":
+        textToCopy = color.rgb;
+          break;
+          case "hsl":
+          default:
+        textToCopy = color.hsl;
+    }
+  
       try {
         await navigator.clipboard.writeText(textToCopy);
         box.classList.add('copied');
