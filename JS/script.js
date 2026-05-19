@@ -1,14 +1,4 @@
-/**
- * script.js
- * Generador de paletas con tipos, brillo y saturación interactivos
- *
- * Versión educativa: variables y funciones con nombres claros,
- * comentarios explicativos y estructura modular para facilitar el aprendizaje.
- */
 
-/* =========================
-   Constantes y utilidades
-   ========================= */
 
 /**
  * Tiempo en ms que dura visible el toast

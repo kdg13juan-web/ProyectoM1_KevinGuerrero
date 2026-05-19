@@ -62,8 +62,6 @@ aside.sidebar{
   flex: 1;
   padding: 20px;
   text-align: center;
-
-  /* Fondo con imagen */
   background-image: url("../img/fondo.png");
   background-size: cover;
   background-position: center;
